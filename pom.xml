@@ -97,13 +97,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.ultracommerce</groupId>
-            <artifactId>ultracommerce-third-party-integration-config</artifactId>
-            <version>default</version>
-            <optional>true</optional>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <type>jar</type>
