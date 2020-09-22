@@ -1,20 +1,20 @@
 # Module Installation
-The Broadleaf Amazon module requires [configuration](#configuration-changes) and [third-party property configuration](#third-party-property-configuration)
+The Ultra Amazon module requires [configuration](#configuration-changes) and [third-party property configuration](#third-party-property-configuration)
 
-## Broadleaf Dependency
+## Ultra Dependency
 
-- Version 2.1.x-GA requires Broadleaf 5.2 or later.
-- Version 2.0.x-GA requires Broadleaf 5.0 or 5.1
-- Version 1.1.x-GA requires Broadleaf 4.0 or 4.1
-- Version 1.0.x-GA requires Broadleaf 3.1
+- Version 2.1.x-GA requires Ultra 5.2 or later.
+- Version 2.0.x-GA requires Ultra 5.0 or 5.1
+- Version 1.1.x-GA requires Ultra 4.0 or 4.1
+- Version 1.0.x-GA requires Ultra 3.1
 
 ## Configuration Changes
 **Step 1.**  Add the dependency into your `core/pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>org.broadleafcommerce</groupId>
-    <artifactId>broadleaf-amazon</artifactId>
+    <groupId>com.ultracommerce</groupId>
+    <artifactId>ultra-amazon</artifactId>
 </dependency>
 ```
 
@@ -22,7 +22,7 @@ The Broadleaf Amazon module requires [configuration](#configuration-changes) and
 This module requires you to configure properties specific to your amazon account.
 
 ### Amazon Credentials
-Broadleaf requires access to your Amazon AWS account. See [About Amazon Credentials](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for more information.
+Ultra requires access to your Amazon AWS account. See [About Amazon Credentials](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for more information.
 
 **AccessKeyId / SecretKey**
 One approach for setting up credentials is to use an accessKeyId and secretKey.  When you create the access keys on amazon you will need to copy the values and add the following properties to your `common-shared.properties` file located in your core project.
@@ -39,7 +39,7 @@ If you are using Instance Profiles, then the following property should be set:
     aws.s3.useInstanceProfile=true
 
 ### Amazon File Storage Location Information
-Broadleaf needs to know the specific location within your S3 account to store the files.   You will need to set the bucket name and the bucket location.  These properties are described on the [Amazon S3 Location Selection page](http://docs.aws.amazon.com/AmazonS3/latest/dev/LocationSelection.html).
+Ultra needs to know the specific location within your S3 account to store the files.   You will need to set the bucket name and the bucket location.  These properties are described on the [Amazon S3 Location Selection page](http://docs.aws.amazon.com/AmazonS3/latest/dev/LocationSelection.html).
 
 _The bucket name must be unique across all of Amazon_
 

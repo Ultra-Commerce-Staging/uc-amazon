@@ -1,21 +1,21 @@
 /*
  * #%L
- * BroadleafCommerce Amazon Integrations
+ * UltraCommerce Amazon Integrations
  * %%
- * Copyright (C) 2009 - 2014 Broadleaf Commerce
+ * Copyright (C) 2009 - 2014 Ultra Commerce
  * %%
- * Licensed under the Broadleaf Fair Use License Agreement, Version 1.0
- * (the "Fair Use License" located  at http://license.broadleafcommerce.org/fair_use_license-1.0.txt)
- * unless the restrictions on use therein are violated and require payment to Broadleaf in which case
- * the Broadleaf End User License Agreement (EULA), Version 1.1
- * (the "Commercial License" located at http://license.broadleafcommerce.org/commercial_license-1.1.txt)
+ * Licensed under the Ultra Fair Use License Agreement, Version 1.0
+ * (the "Fair Use License" located  at http://license.ultracommerce.org/fair_use_license-1.0.txt)
+ * unless the restrictions on use therein are violated and require payment to Ultra in which case
+ * the Ultra End User License Agreement (EULA), Version 1.1
+ * (the "Commercial License" located at http://license.ultracommerce.org/commercial_license-1.1.txt)
  * shall apply.
  *
  * Alternatively, the Commercial License may be replaced with a mutually agreed upon license (the "Custom License")
- * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
+ * between you and Ultra Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package org.broadleafcommerce.vendor.amazon.s3;
+package com.ultracommerce.vendor.amazon.s3;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,14 +33,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.broadleafcommerce.common.file.FileServiceException;
-import org.broadleafcommerce.common.file.domain.FileWorkArea;
-import org.broadleafcommerce.common.file.service.BroadleafFileService;
-import org.broadleafcommerce.common.file.service.FileServiceProvider;
-import org.broadleafcommerce.common.file.service.type.FileApplicationType;
-import org.broadleafcommerce.common.io.ConcurrentFileOutputStream;
-import org.broadleafcommerce.common.site.domain.Site;
-import org.broadleafcommerce.common.web.BroadleafRequestContext;
+import com.ultracommerce.common.file.FileServiceException;
+import com.ultracommerce.common.file.domain.FileWorkArea;
+import com.ultracommerce.common.file.service.UltraFileService;
+import com.ultracommerce.common.file.service.FileServiceProvider;
+import com.ultracommerce.common.file.service.type.FileApplicationType;
+import com.ultracommerce.common.io.ConcurrentFileOutputStream;
+import com.ultracommerce.common.site.domain.Site;
+import com.ultracommerce.common.web.UltraRequestContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -57,13 +57,13 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 
-@Service("blS3FileServiceProvider")
+@Service("ucS3FileServiceProvider")
 /**
  * Provides an Amazon S3 compatible implementation of the FileServiceProvider interface.
  *
- * Uses the <code>blS3ConfigurationService</code> component to provide the amazon connection details.   Once a
+ * Uses the <code>ucS3ConfigurationService</code> component to provide the amazon connection details.   Once a
  * resource is retrieved from Amazon, the resulting input stream is written to a File on the local file system using
- * <code>blFileService</code> to determine the local file path.
+ * <code>ucFileService</code> to determine the local file path.
  *
  * @author bpolster
  * @author Mike Garrett
@@ -74,22 +74,22 @@ public class S3FileServiceProvider implements FileServiceProvider {
 
     private static final Log LOG = LogFactory.getLog(S3FileServiceProvider.class);
 
-    @Resource(name = "blS3ConfigurationService")
+    @Resource(name = "ucS3ConfigurationService")
     protected S3ConfigurationService s3ConfigurationService;
 
-    @Resource(name = "blFileService")
-    protected BroadleafFileService blFileService;
+    @Resource(name = "ucFileService")
+    protected UltraFileService ucFileService;
 
     protected Map<S3Configuration, AmazonS3> configClientMap = new HashMap<>();
 
-    @Resource(name = "blConcurrentFileOutputStream")
+    @Resource(name = "ucConcurrentFileOutputStream")
     protected ConcurrentFileOutputStream concurrentFileOutputStream;
 
     protected static String BUCKET_PREFIX="bucket://";
 
     protected static String SITE_PREFIX="site-";
 
-    protected static String MULTITENANT_SITE_CLASSNAME= "com.broadleafcommerce.tenant.domain.MultiTenantSite";
+    protected static String MULTITENANT_SITE_CLASSNAME= "com.ultracommerce.tenant.domain.MultiTenantSite";
 
     protected static String MULTITENANTSITE_GETPARENTID_METHODNAME= "getParentSiteId";
 
@@ -158,7 +158,7 @@ public class S3FileServiceProvider implements FileServiceProvider {
     public File getResource(String rawName, FileApplicationType fileApplicationType, boolean isParent) {
         String resourceName=(isParent?buildResourceParentName(rawName):buildResourceName(rawName));
         LOG.debug("Local Resource name: "+ resourceName);
-        File returnFile = blFileService.getLocalResource(resourceName);
+        File returnFile = ucFileService.getLocalResource(resourceName);
         InputStream inputStream = null;
         String name;
 
@@ -259,7 +259,7 @@ public class S3FileServiceProvider implements FileServiceProvider {
         AmazonS3 s3 = getAmazonS3Client(s3config);
         s3.deleteObject(s3config.getDefaultBucketName(), buildResourceName(name));
 
-        File returnFile = blFileService.getLocalResource(buildResourceName(name));
+        File returnFile = ucFileService.getLocalResource(buildResourceName(name));
         if (returnFile != null) {
             returnFile.delete();
         }
@@ -294,7 +294,7 @@ public class S3FileServiceProvider implements FileServiceProvider {
     }
 
     protected String getSiteSpecificResourceName(String resourceName) {
-        BroadleafRequestContext brc = BroadleafRequestContext.getBroadleafRequestContext();
+        UltraRequestContext brc = UltraRequestContext.getUltraRequestContext();
         if (brc != null) {
             Site site = brc.getNonPersistentSite();
             if (site != null) {
@@ -368,8 +368,8 @@ public class S3FileServiceProvider implements FileServiceProvider {
         };
     }
 
-    public void setBroadleafFileService(BroadleafFileService bfs) {
-        this.blFileService = bfs;
+    public void setUltraFileService(UltraFileService bfs) {
+        this.ucFileService = bfs;
     }
 
     public void setConcurrentFileOutputStream(ConcurrentFileOutputStream concurrentFileOutputStream) {
@@ -477,7 +477,7 @@ public class S3FileServiceProvider implements FileServiceProvider {
      * @return
      */
     protected String getMultiTenantSiteSpecificResourceNameParent(String resourceName) {
-        BroadleafRequestContext brc = BroadleafRequestContext.getBroadleafRequestContext();
+        UltraRequestContext brc = UltraRequestContext.getUltraRequestContext();
         if (brc != null) {
             //getMultiTenantClass retrieves the class by reflection, the casts.
             Object site="";

@@ -1,1 +1,1 @@
-org.broadleafcommerce.common.module.BroadleafModuleRegistration=org.broadleafcommerce.vendor.amazon.s3.config.AmazonS3ModuleRegistration
+com.ultracommerce.common.module.UltraModuleRegistration=com.ultracommerce.vendor.amazon.s3.config.AmazonS3ModuleRegistration

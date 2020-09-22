@@ -1,22 +1,22 @@
 /*
  * #%L
- * BroadleafCommerce Amazon Integrations
+ * UltraCommerce Amazon Integrations
  * %%
- * Copyright (C) 2009 - 2014 Broadleaf Commerce
+ * Copyright (C) 2009 - 2014 Ultra Commerce
  * %%
- * Licensed under the Broadleaf Fair Use License Agreement, Version 1.0
- * (the "Fair Use License" located  at http://license.broadleafcommerce.org/fair_use_license-1.0.txt)
- * unless the restrictions on use therein are violated and require payment to Broadleaf in which case
- * the Broadleaf End User License Agreement (EULA), Version 1.1
- * (the "Commercial License" located at http://license.broadleafcommerce.org/commercial_license-1.1.txt)
+ * Licensed under the Ultra Fair Use License Agreement, Version 1.0
+ * (the "Fair Use License" located  at http://license.ultracommerce.org/fair_use_license-1.0.txt)
+ * unless the restrictions on use therein are violated and require payment to Ultra in which case
+ * the Ultra End User License Agreement (EULA), Version 1.1
+ * (the "Commercial License" located at http://license.ultracommerce.org/commercial_license-1.1.txt)
  * shall apply.
  * 
  * Alternatively, the Commercial License may be replaced with a mutually agreed upon license (the "Custom License")
- * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
+ * between you and Ultra Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
 
-package org.broadleafcommerce.vendor.amazon.s3;
+package com.ultracommerce.vendor.amazon.s3;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,12 +25,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.broadleafcommerce.common.file.domain.FileWorkArea;
-import org.broadleafcommerce.common.file.service.BroadleafFileServiceExtensionManager;
-import org.broadleafcommerce.common.file.service.BroadleafFileServiceImpl;
-import org.broadleafcommerce.common.io.ConcurrentFileOutputStreamImpl;
-import org.broadleafcommerce.common.site.domain.SiteImpl;
-import org.broadleafcommerce.common.web.BroadleafRequestContext;
+import com.ultracommerce.common.file.domain.FileWorkArea;
+import com.ultracommerce.common.file.service.UltraFileServiceExtensionManager;
+import com.ultracommerce.common.file.service.UltraFileServiceImpl;
+import com.ultracommerce.common.io.ConcurrentFileOutputStreamImpl;
+import com.ultracommerce.common.site.domain.SiteImpl;
+import com.ultracommerce.common.web.UltraRequestContext;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -69,9 +69,9 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
                                                     + "01234567890112345678901234\n"
                                                     + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public class S3BroadleafFileService extends BroadleafFileServiceImpl {
-        public S3BroadleafFileService() {
-            extensionManager = new BroadleafFileServiceExtensionManager();
+    public class S3UltraFileService extends UltraFileServiceImpl {
+        public S3UltraFileService() {
+            extensionManager = new UltraFileServiceExtensionManager();
         }
     }
 
@@ -85,7 +85,7 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
     public static void setupProvider() {
         s3FileProvider.s3ConfigurationService = configService;
         S3FileServiceProviderTest testFileServiceProvider = new S3FileServiceProviderTest();
-        s3FileProvider.setBroadleafFileService(testFileServiceProvider.new S3BroadleafFileService());
+        s3FileProvider.setUltraFileService(testFileServiceProvider.new S3UltraFileService());
         s3FileProvider.setConcurrentFileOutputStream(testFileServiceProvider.new MockConcurrentFileOutputStream());
     }
 
@@ -93,7 +93,7 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
     public void testFileProcesses() throws IOException {
         resetAllProperties();
         //AbstractS3Test.propService.setProperty("aws.s3.bucketSubDirectory", "img");
-        String filename = "blcTestFile.txt";
+        String filename = "ucTestFile.txt";
         boolean ok = uploadTestFileTestOk(filename);
         assertTrue("File added to s3 with no exception.", ok);
 
@@ -109,14 +109,14 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
 
     @Test
     public void testSubDirectory() throws IOException {
-        String filename = "blcTestFile.txt";
+        String filename = "ucTestFile.txt";
         String subDirectory = "img";
         verifyFileUploadRaw(filename, subDirectory);
     }
   
     @Test
     public void testSubDirectoryWithSlashes() throws IOException {
-        String filename = "/blcTestFile.txt";
+        String filename = "/ucTestFile.txt";
         String subDirectory = "/img/";
         verifyFileUploadRaw(filename, subDirectory);
     }
@@ -124,25 +124,25 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
     @Test
     public void testSiteSpecificFile() throws IOException {
         // initialize the site before resetting properties to get the properties cache right
-        BroadleafRequestContext context = new BroadleafRequestContext();
+        UltraRequestContext context = new UltraRequestContext();
         SiteImpl site = new SiteImpl();
         site.setId(10l);
         site.setName("Test Site");
         context.setNonPersistentSite(site);
-        BroadleafRequestContext.setBroadleafRequestContext(context);
+        UltraRequestContext.setUltraRequestContext(context);
  
         resetAllProperties();
        
-        String filename = "/blcTestFile.txt";
+        String filename = "/ucTestFile.txt";
         String subDirectory = "/img/";
         verifyFileUploadRaw(filename, subDirectory);
         
-        BroadleafRequestContext.setBroadleafRequestContext(new BroadleafRequestContext());
+        UltraRequestContext.setUltraRequestContext(new UltraRequestContext());
     }
     
     @Test
     public void testRemoveAddedResourceByName() {
-        String fileName = "blcTestFile.txt";
+        String fileName = "ucTestFile.txt";
         propService.setProperty("aws.s3.bucketSubDirectory", "/img/");
         List<String> resourceNames = uploadTestFileWithResult(fileName);
         assertTrue("No resource names return", CollectionUtils.isNotEmpty(resourceNames));
@@ -159,15 +159,15 @@ public class S3FileServiceProviderTest extends AbstractS3Test {
     
     @Test
     public void testSubDirectoryTree() throws IOException {
-        String filename = "/blcTestFile.txt";
+        String filename = "/ucTestFile.txt";
         String subDirectory = "/img/sub1/sub2";
         verifyFileUploadRaw(filename, subDirectory);
     }
     
     /**
      * Differs from {@link #checkTestFileExists(String)} in that this uses the S3 client directly and does
-     * not go through the Broadleaf file service API. This will create a test file, upload it to S3 via the
-     * Broadleaf file service API, verify that the file exists via the raw S3 client, and then delete the file
+     * not go through the Ultra file service API. This will create a test file, upload it to S3 via the
+     * Ultra file service API, verify that the file exists via the raw S3 client, and then delete the file
      * from the bucket via the file service API again
      * 
      * @param filename the name of the file to upload
