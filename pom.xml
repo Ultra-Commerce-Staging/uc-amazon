@@ -10,7 +10,7 @@
     <artifactId>ultracommerce-amazon</artifactId>
     <name>UltraCommerce Amazon Integrations</name>
     <description>UltraCommerce Amazon Integrations</description>
-    <version>3.0.1-GA</version>
+    <version>3.0.2-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ultracommerce.version>6.1.3-GA</ultracommerce.version>
@@ -20,7 +20,7 @@
         <connection>scm:git:git@github.com:Ultra-Commerce-Staging/uc-amazon.git</connection>
         <developerConnection>scm:git:git@github.com:Ultra-Commerce-Staging/uc-amazon.git</developerConnection>
         <url>https://github.com/Ultra-Commerce-Staging/uc-amazon</url>
-        <tag>ultracommerce-amazon-3.0.1-GA</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <url>https://ultracommerce.co</url>
